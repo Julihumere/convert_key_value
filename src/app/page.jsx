@@ -7,7 +7,7 @@ import toast, { Toaster } from "react-hot-toast";
 export default function Home() {
   const [input, setInput] = useState("");
 
-  const [result, setResult] = useState("");
+  const [result, setResult] = useState();
 
   const notify = () => {
     if (result === "") {
@@ -18,17 +18,49 @@ export default function Home() {
     }
   };
 
-  let convertir = (e: string) => {
-    let convert = e
-      .replace(/{/g, "")
-      .replace(/}/g, "")
-      .replace(/,/g, "")
-      .replace(/ /g, "")
-      .replace(/"/g, "")
-      .trim();
+  let convertir = (e) => {
+    const regex = /\["([^"]+)",\s*("[^"]+"|\d+)\]/g;
 
-    setResult(convert);
-    console.log(convert);
+    // Objeto para almacenar los resultados
+    const objeto = {};
+
+    let nuevaCadena = "";
+
+    // Iterar sobre los resultados de la expresión regular
+    let match;
+    while ((match = regex.exec(e)) !== null) {
+      const clave = match[1];
+      let valor = match[2];
+
+      // Convertir valores numéricos de cadena a números
+      if (!isNaN(valor)) {
+        valor = parseInt(valor);
+      } else {
+        valor = valor.replace(/"/g, ""); // Eliminar comillas dobles de los valores de cadena
+      }
+
+      objeto[clave] = valor;
+    }
+
+    for (const [clave, valor] of Object.entries(objeto)) {
+      nuevaCadena += `${clave}:${valor}\n`;
+      console.log(`${clave}:${valor}`);
+    }
+
+    console.log(nuevaCadena);
+
+    // let json = JSON.stringify(objeto, null, 2);
+
+    // let convert = json
+    //   .replace(/{/g, "")
+    //   .replace(/}/g, "")
+    //   .replace(/,/g, "")
+    //   .replace(/"/g, "")
+    //   .trim();
+
+    // console.log(convert);
+
+    setResult(nuevaCadena);
   };
 
   return (
