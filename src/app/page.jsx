@@ -19,7 +19,8 @@ export default function Home() {
   };
 
   let convertir = (e) => {
-    const regex = /\["([^"]+)",\s*("[^"]+"|\d+)\]/g;
+    console.log(e);
+    const regex = /\["([^"]+)",\s*("[^"]+"|\d+|null)\]/g;
 
     // Objeto para almacenar los resultados
     const objeto = {};
@@ -33,11 +34,15 @@ export default function Home() {
       let valor = match[2];
 
       // Convertir valores numéricos de cadena a números
-      if (!isNaN(valor)) {
+      if (!isNaN(valor) && valor !== "null") {
         valor = parseInt(valor);
+      } else if (valor === "null") {
+        valor = null;
       } else {
         valor = valor.replace(/"/g, ""); // Eliminar comillas dobles de los valores de cadena
       }
+
+      console.log(valor);
 
       objeto[clave] = valor;
     }
@@ -48,17 +53,6 @@ export default function Home() {
     }
 
     console.log(nuevaCadena);
-
-    // let json = JSON.stringify(objeto, null, 2);
-
-    // let convert = json
-    //   .replace(/{/g, "")
-    //   .replace(/}/g, "")
-    //   .replace(/,/g, "")
-    //   .replace(/"/g, "")
-    //   .trim();
-
-    // console.log(convert);
 
     setResult(nuevaCadena);
   };
